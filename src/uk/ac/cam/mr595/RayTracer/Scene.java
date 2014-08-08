@@ -1,23 +1,29 @@
 package uk.ac.cam.mr595.RayTracer;
 
 import uk.ac.cam.mr595.RayTracer.Math.Vector3d;
+import uk.ac.cam.mr595.RayTracer.Objects.AbstractObject;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Scene {
     private final Camera camera;
-    private List<Mesh> meshes;
+    private List<AbstractObject> objects;
     private List<Light> lights;
 
     public Scene() {
-        meshes = new ArrayList<Mesh>();
+        objects = new ArrayList<AbstractObject>();
         lights = new ArrayList<Light>();
         camera = new Camera();
     }
 
-    public void addMesh(Mesh m) {
-        meshes.add(m);
+    public void addMesh(AbstractObject m) {
+        objects.add(m);
+    }
+
+    public void addLight(Light l) {
+        lights.add(l);
     }
 
     public Camera getCamera() {
@@ -30,25 +36,48 @@ public class Scene {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 Vector3d origin = camera.getPosition();
-                Vector3d direction = camera.getDirection();
+                Vector3d direction = camera.getDirection().add(new Vector3d(0, i - width / 2, j - height / 2).mul(1.0 / height));
                 Ray ray = new Ray(origin, direction);
 
                 double minimumDistance = Double.POSITIVE_INFINITY;
-                Mesh intersectionMesh = null;
+                AbstractObject intersectionObject = null;
                 Vector3d intersectionPoint = null;
 
-                for(Mesh m: meshes) {
+                for(AbstractObject m: objects) {
                     Vector3d intersection = m.intersect(ray);
+                    if (intersection == null) {
+                        continue;
+                    }
+
                     if (origin.distanceTo(intersection) < minimumDistance) {
-                        intersectionMesh = m;
+                        intersectionObject = m;
                         intersectionPoint = intersection;
                         minimumDistance = origin.distanceTo(intersection);
                     }
                 }
 
-                if (intersectionMesh != null) {
-                    render.putPixel(i, j, intersectionMesh.getColorAt(intersectionPoint));
+                if (intersectionObject == null) continue;
+
+                double totalDiffuseIllumination = 0.0;
+                double totalSpecularIllumination = 0.0;
+                Vector3d normal = intersectionObject.normal(intersectionPoint);
+                for (Light l: lights) {
+                    Vector3d toLight = l.getPosition().sub(intersectionPoint).unit();
+                    double diffuse = normal.dot(toLight);
+                    if (diffuse > 0) {
+                        totalDiffuseIllumination += diffuse;
+                    }
+
+                    Vector3d reflection = toLight.sub(normal.mul(2*toLight.dot(normal)));
+                    double specular = l.getPosition().uminus().unit().dot(reflection);
+                    if (specular > 0) {
+                        totalSpecularIllumination += Math.pow(specular, 5);
+                    }
                 }
+
+                int g = (int)(255*(totalDiffuseIllumination*0.3 + totalSpecularIllumination*0.7));
+
+                render.putPixel(i, j, new Color(g,0,0));
             }
         }
 

@@ -8,7 +8,7 @@ public class Camera {
 
     public Camera() {
         this.position = new Vector3d(0, 0, 0);
-        this.direction = new Vector3d(0, 0, 1);
+        this.direction = new Vector3d(1, 0, 0);
     }
 
     public Camera(Vector3d position) {
