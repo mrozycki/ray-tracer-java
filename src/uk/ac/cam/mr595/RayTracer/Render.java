@@ -1,10 +1,10 @@
 package uk.ac.cam.mr595.RayTracer;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.awt.Color;
 
 public class Render {
     private Color[][] pixels;
@@ -15,7 +15,7 @@ public class Render {
         pixels = new Color[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                pixels[i][j] = new Color(0, 0, 64);
+                pixels[i][j] = new Color(47, 47, 47);
             }
         }
         this.width = width;

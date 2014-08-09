@@ -9,8 +9,15 @@ import java.awt.*;
 
 public class Sphere extends AbstractObject {
 
+    private Color color;
+
     public Sphere(Vector3d position, double radius) {
         this.localToWorld = new Scale(radius).add(new Translate(position));
+    }
+
+    public Sphere(Vector3d position, double radius, Color color) {
+        this(position, radius);
+        this.color = color;
     }
 
     @Override
@@ -44,6 +51,6 @@ public class Sphere extends AbstractObject {
 
     @Override
     public Color getColorAt(Vector3d intersectionPoint) {
-        return Color.RED;
+        return color;
     }
 }
