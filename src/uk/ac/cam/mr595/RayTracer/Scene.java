@@ -57,19 +57,19 @@ public class Scene {
                 }
 
                 if (intersectionObject == null) continue;
+                if (intersectionPoint == null || intersectionPoint.x < 1) continue;
 
                 double totalDiffuseIllumination = 0.0;
                 double totalSpecularIllumination = 0.0;
                 Vector3d normal = intersectionObject.normal(intersectionPoint);
                 for (Light l: lights) {
-                    Vector3d toLight = l.getPosition().sub(intersectionPoint).unit();
-                    double diffuse = normal.dot(toLight);
+                    double diffuse = l.diffuse(normal, intersectionPoint);
                     if (diffuse > 0) {
                         totalDiffuseIllumination += diffuse;
                     }
 
-                    Vector3d reflection = toLight.sub(normal.mul(2*toLight.dot(normal)));
-                    double specular = l.getPosition().uminus().unit().dot(reflection);
+                    Vector3d reflection = l.reflect(normal, intersectionPoint);
+                    double specular = intersectionPoint.uminus().unit().dot(reflection);
                     if (specular > 0) {
                         totalSpecularIllumination += Math.pow(specular, 5);
                     }

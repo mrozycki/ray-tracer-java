@@ -9,12 +9,7 @@ import java.awt.*;
 
 public class Sphere extends AbstractObject {
 
-    private double radius;
-    private Vector3d position;
-
     public Sphere(Vector3d position, double radius) {
-        this.radius = radius;
-        this.position = position;
         this.localToWorld = new Scale(radius).add(new Translate(position));
     }
 
@@ -43,7 +38,8 @@ public class Sphere extends AbstractObject {
 
     @Override
     protected Vector3d localNormal(Vector3d pos) {
-        return pos.unit();
+        if (Math.abs(pos.length() - 1) > 0.001) return null;
+        else return pos.unit();
     }
 
     @Override
