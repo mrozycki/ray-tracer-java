@@ -83,10 +83,11 @@ public class Scene {
                     totalSpecularIllumination = 1.0;
                 }
 
-                double g = totalDiffuseIllumination*0.4 + totalSpecularIllumination*0.6;
+                double g = totalDiffuseIllumination*1.0 + totalSpecularIllumination*0.0;
                 Color c = intersectionObject.getColorAt(intersectionPoint);
 
                 render.putPixel(i, j, new Color((int)(g*c.getRed()),(int)(g*c.getGreen()),(int)(g*c.getBlue())));
+
             }
         }
 

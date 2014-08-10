@@ -13,6 +13,10 @@ public class Vector3d {
         return this.x*v.x + this.y*v.y + this.z*v.z;
     }
 
+    public Vector3d cross(Vector3d v) {
+        return new Vector3d ( y*v.z - z*v.y, z*v.x - x*v.z, x*v.y - y*v.x );
+    }
+
     public Vector3d add(Vector3d v) {
         return new Vector3d (x+v.x, y+v.y, z+v.z);
     }
@@ -35,6 +39,16 @@ public class Vector3d {
 
     public Vector3d uminus() {
         return this.mul(-1);
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof Vector3d)) {
+            return false;
+        }
+
+        Vector3d v = (Vector3d)o;
+
+        return x == v.x && y == v.y && z == v.z;
     }
 
     public double distanceTo(Vector3d v) {
