@@ -11,7 +11,7 @@ public abstract class AbstractObject {
     protected Transform localToWorld;
 
     public final Vector3d normal(Vector3d pos) {
-        return localToWorld.inverse().noTranslation().applyTo(localNormal(worldToLocal(pos)));
+        return localToWorld.noTranslation().applyTo(localNormal(worldToLocal(pos))).unit();
     }
 
     public final Vector3d intersect(Ray ray) {

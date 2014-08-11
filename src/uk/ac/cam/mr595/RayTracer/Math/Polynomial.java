@@ -71,15 +71,20 @@ public class Polynomial {
         if (Double.isInfinite(start) && Double.isInfinite(end)) {
             approx = 1;
         } else if (Double.isInfinite(start)) {
-            approx = end - 10;
+            approx = end - 1;
         } else if (Double.isInfinite(end)) {
-            approx = start+10;
+            approx = start+1;
         } else {
             approx = (start+end)/2;
         }
 
-        while (Math.abs(valueAt(approx)) > 1e-6) {
+        while (Math.abs(valueAt(approx)) > 1e-10) {
             approx = approx - this.valueAt(approx)/derivative.valueAt(approx);
+            if (approx > end) {
+                approx = 2*end - approx;
+            } else if (approx < start) {
+                approx = 2*start - approx;
+            }
         }
 
         return approx;
