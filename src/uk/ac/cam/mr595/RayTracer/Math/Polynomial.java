@@ -21,6 +21,10 @@ public class Polynomial {
         this(Arrays.asList(a0, a1, a2, a3, a4));
     }
 
+    public Polynomial(double a0, double a1, double a2) {
+        this(Arrays.asList(a0, a1, a2));
+    }
+
     public Set<Double> solve() {
         if (coefficients.size() == 3) return solveQuadratic();
         Set<Double> result = new TreeSet<Double>();
@@ -54,8 +58,7 @@ public class Polynomial {
         double delta = b*b - 4*a*c;
 
         TreeSet<Double> result = new TreeSet<Double>();
-        if (delta < 0) {
-        } else if (delta == 0) {
+        if (delta == 0) {
             result.add(-b/(2*a));
         } else {
             result.add((-b-Math.sqrt(delta))/(2*a));
@@ -99,8 +102,8 @@ public class Polynomial {
         double power = 1;
         double result = 0;
 
-        for (int i = 0; i < coefficients.size(); i++) {
-            result += coefficients.get(i)*power;
+        for (Double coefficient : coefficients) {
+            result += coefficient * power;
             power *= x;
         }
 

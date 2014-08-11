@@ -23,19 +23,11 @@ public class Transform {
     }
 
     public final Transform add(Transform t) {
-        try {
-            return new Transform(t.matrix.times(matrix));
-        } catch (IncorrectTransformSizeException e) {
-            throw new RuntimeException("Lol, how did that happen?");
-        }
+        return new Transform(t.matrix.times(matrix));
     }
 
     public final Transform inverse() {
-        try {
-            return new Transform(matrix.inverse());
-        } catch (IncorrectTransformSizeException e) {
-            throw new RuntimeException("Lol, how did that happen?");
-        }
+        return new Transform(matrix.inverse());
     }
 
     public final Vector3d applyTo(Vector3d v) {
@@ -49,11 +41,6 @@ public class Transform {
         Matrix sub = matrix.getMatrix(0,2,0,2).inverse().transpose();
         Matrix result = Matrix.identity(4,4);
         result.setMatrix(0,2,0,2, sub);
-        try {
-            return new Transform(result);
-        } catch (IncorrectTransformSizeException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new Transform(result);
     }
 }

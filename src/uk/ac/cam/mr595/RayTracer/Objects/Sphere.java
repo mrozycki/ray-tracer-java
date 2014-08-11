@@ -1,11 +1,13 @@
 package uk.ac.cam.mr595.RayTracer.Objects;
 
+import uk.ac.cam.mr595.RayTracer.Math.Polynomial;
 import uk.ac.cam.mr595.RayTracer.Math.Transform.Scale;
 import uk.ac.cam.mr595.RayTracer.Math.Transform.Translate;
 import uk.ac.cam.mr595.RayTracer.Math.Vector3d;
 import uk.ac.cam.mr595.RayTracer.Ray;
 
 import java.awt.*;
+import java.util.Set;
 
 public class Sphere extends AbstractObject {
 
@@ -26,21 +28,21 @@ public class Sphere extends AbstractObject {
         double b = ray.direction.dot(ray.origin) * 2;
         double c = Math.pow(ray.origin.length(), 2) - 1;
 
-        double delta = b*b - 4*a*c;
-        if (delta < 0) {
-            return null;
-        }
-        double t1 = (-b-Math.sqrt(delta))/(2*a);
-        double t2 = (-b+Math.sqrt(delta))/(2*a);
+        Set<Double> solutions = new Polynomial(c, b, a).solve();
+        Double[] ts = solutions.toArray(new Double[solutions.size()]);
 
-        Vector3d i1 = ray.origin.add(ray.direction.mul(t1));
-        Vector3d i2 = ray.origin.add(ray.direction.mul(t2));
+        double minimumDistance = Double.POSITIVE_INFINITY;
+        Vector3d closestIntersect = null;
 
-        if (i1.distanceTo(ray.origin) < i2.distanceTo(ray.origin)) {
-            return i1;
-        } else {
-            return i2;
+        for (Double t: ts) {
+            Vector3d intersect = ray.origin.add(ray.direction.mul(t));
+            if (ray.origin.distanceTo(intersect) < minimumDistance) {
+                minimumDistance = ray.origin.distanceTo(intersect);
+                closestIntersect = intersect;
+            }
         }
+
+        return closestIntersect;
     }
 
     @Override
