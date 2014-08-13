@@ -14,6 +14,7 @@ public class Sphere extends AbstractObject {
     private Color color;
 
     public Sphere(Vector3d position, double radius) {
+        super(0.6, 0.4);
         this.localToWorld = new Scale(radius).add(new Translate(position));
     }
 
@@ -35,6 +36,7 @@ public class Sphere extends AbstractObject {
         Vector3d closestIntersect = null;
 
         for (Double t: ts) {
+            if (t < 0) continue;
             Vector3d intersect = ray.origin.add(ray.direction.mul(t));
             if (ray.origin.distanceTo(intersect) < minimumDistance) {
                 minimumDistance = ray.origin.distanceTo(intersect);

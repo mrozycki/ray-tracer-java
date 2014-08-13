@@ -13,16 +13,4 @@ public class Light {
         return position;
     }
 
-    public Vector3d reflect(Vector3d normal, Vector3d pos) {
-        Vector3d toLight = position.sub(pos).unit();
-
-        return toLight.uminus().sub(normal.mul(2*toLight.uminus().dot(normal)));
-    }
-
-    public double diffuse(Vector3d normal, Vector3d pos) {
-        Vector3d toLight = position.sub(pos).unit();
-
-        return normal.dot(toLight);
-    }
-
 }

@@ -13,11 +13,6 @@ public class Render {
 
     public Render(int width, int height) {
         pixels = new Color[width][height];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                pixels[i][j] = new Color(47, 47, 47);
-            }
-        }
         this.width = width;
         this.height = height;
     }

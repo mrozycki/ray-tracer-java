@@ -12,10 +12,10 @@ import java.util.Set;
 public class Torus extends AbstractObject {
     private double innerRadius, outerRadius;
     private Vector3d position;
-    private Sphere boundingSphere;
     private Color color;
 
     public Torus(Vector3d position, Vector3d normal, double innerRadius, double outerRadius, Color color) {
+        super(0.6, 0.4);
         this.position = position;
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
@@ -25,13 +25,10 @@ public class Torus extends AbstractObject {
         } else {
             this.localToWorld = new Rotate(new Vector3d(1, 0, 0), normal).add(new Translate(position));
         }
-        this.boundingSphere = new Sphere(position, outerRadius+innerRadius);
     }
 
     @Override
     protected Vector3d localIntersect(Ray ray) {
-        if (boundingSphere.localIntersect(ray) == null) return null;
-
         double R = outerRadius;
         double r = innerRadius;
         Vector3d d = ray.direction;
