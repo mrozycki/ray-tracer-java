@@ -30,10 +30,15 @@ public class Scene {
         return this.camera;
     }
 
+    public Render render(int width, int height, int aaLevel) {
+        return render(width*aaLevel, height*aaLevel).subsample(aaLevel);
+    }
+
     public Render render(int width, int height) {
         Render render = new Render(width, height);
 
         for (int i = 0; i < width; i++) {
+            System.out.println(i);
             for (int j = 0; j < height; j++) {
                 Vector3d origin = camera.getPosition();
                 Vector3d direction = camera.getDirection().add(new Vector3d(0, i - width / 2, j - height / 2).mul(1.0 / height));
@@ -83,7 +88,7 @@ public class Scene {
                     totalSpecularIllumination = 1.0;
                 }
 
-                double g = totalDiffuseIllumination*0.8 + totalSpecularIllumination*0.2;
+                double g = totalDiffuseIllumination*0.6 + totalSpecularIllumination*0.4;
                 Color c = intersectionObject.getColorAt(intersectionPoint);
 
                 render.putPixel(i, j, new Color((int)(g*c.getRed()),(int)(g*c.getGreen()),(int)(g*c.getBlue())));

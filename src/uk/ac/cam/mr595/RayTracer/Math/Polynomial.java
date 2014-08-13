@@ -60,7 +60,7 @@ public class Polynomial {
         TreeSet<Double> result = new TreeSet<Double>();
         if (delta == 0) {
             result.add(-b/(2*a));
-        } else {
+        } else if (delta > 0) {
             result.add((-b-Math.sqrt(delta))/(2*a));
             result.add((-b+Math.sqrt(delta))/(2*a));
         }
@@ -72,25 +72,78 @@ public class Polynomial {
 
         double approx;
         if (Double.isInfinite(start) && Double.isInfinite(end)) {
-            approx = 1;
+            approx = 0.0;
         } else if (Double.isInfinite(start)) {
-            approx = end - 1;
+            approx = end-10;
         } else if (Double.isInfinite(end)) {
-            approx = start+1;
+            approx = start+10;
         } else {
             approx = (start+end)/2;
         }
 
-        while (Math.abs(valueAt(approx)) > 1e-10) {
+        int iterations = 0;
+        while (Math.abs(valueAt(approx)) > 1e-10 && iterations < 20) {
             approx = approx - this.valueAt(approx)/derivative.valueAt(approx);
-            if (approx > end) {
-                approx = 2*end - approx;
-            } else if (approx < start) {
+            if (approx < start) {
                 approx = 2*start - approx;
+            } else if (approx > end) {
+                approx = 2*end - approx;
             }
+            iterations++;
         }
 
-        return approx;
+        if (iterations >= 20) {
+            return slowFindZeroBetween(start, end);
+        } else {
+            return approx;
+        }
+    }
+
+    private Double slowFindZeroBetween(double start, double end) {
+        if (Double.isInfinite(start) && Double.isInfinite(end)) {
+            start = findSignBefore(0, Math.signum(valueAt(start)));
+            end = findSignAfter(0, Math.signum(valueAt(end)));
+        } else if (Double.isInfinite(start)) {
+            start = findSignBefore(end, Math.signum(valueAt(start)));
+        } else if (Double.isInfinite(end)) {
+            end = findSignAfter(start, Math.signum(valueAt(end)));
+        }
+
+        double middle = end - valueAt(end)*(end-start)/(valueAt(end)-valueAt(start));
+        while (Math.abs(valueAt(middle)) > 1e-6) {
+            if (Math.signum(valueAt(middle)) == Math.signum(valueAt(start))) {
+                start = middle;
+            } else {
+                end = middle;
+            }
+            middle = end - valueAt(end)*(end-start)/(valueAt(end)-valueAt(start));
+        }
+
+        return middle;
+    }
+
+    private Double findSignAfter(double start, double sign) {
+        if (start < 1) {
+            start += 1;
+        }
+
+        while (Math.signum(valueAt(start)) != Math.signum(sign)) {
+            start *= 2;
+        }
+
+        return start;
+    }
+
+    private Double findSignBefore(double end, double sign) {
+        if (end > -1) {
+            end = -1;
+        }
+
+        while (Math.signum(valueAt(end)) != Math.signum(sign)) {
+            end *= 2;
+        }
+
+        return end;
     }
 
     public Double valueAt(double x) {

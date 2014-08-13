@@ -13,11 +13,13 @@ public class Torus extends AbstractObject {
     private double innerRadius, outerRadius;
     private Vector3d position;
     private Sphere boundingSphere;
+    private Color color;
 
-    public Torus(Vector3d position, Vector3d normal, double innerRadius, double outerRadius) {
+    public Torus(Vector3d position, Vector3d normal, double innerRadius, double outerRadius, Color color) {
         this.position = position;
         this.innerRadius = innerRadius;
         this.outerRadius = outerRadius;
+        this.color = color;
         if (normal.equals(new Vector3d(1, 0, 0))) {
             this.localToWorld = new Translate(position);
         } else {
@@ -79,6 +81,6 @@ public class Torus extends AbstractObject {
 
     @Override
     public Color getColorAt(Vector3d intersectionPoint) {
-        return Color.RED;
+        return color;
     }
 }
